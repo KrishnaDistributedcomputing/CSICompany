@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Constellation Software: The Small TAM Advantage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    /* ─── Design tokens ─── */
+    :root, [data-theme="light"] {
+      --color-bg:           #F7F4EE;
+      --color-surface:      #ffffff;
+      --color-surface-2:    #ffffff;
+      --color-border:       #E0DCD4;
+      --color-divider:      #EDE9E1;
+      --color-text:         #0f0f0f;
+      --color-text-muted:   #4a4a4a;
+      --color-text-faint:   #888;
+      --color-primary:      #2563eb;
+      --color-primary-hover:#1d4ed8;
+      --color-primary-light:#eff6ff;
+      --color-cover-bg:     #080c14;
+      --color-cover-text:   #ffffff;
+      --color-gold:         #d97706;
+      --color-rust:         #dc2626;
+      --color-tag-bg:       #f0f9ff;
+      --color-tag-text:     #1e3a8a;
+      --shadow-sm: 0 1px 3px rgba(40,37,29,.07);
+      --shadow-md: 0 4px 16px rgba(40,37,29,.10);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.875rem;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-display: 'Fraunces', serif;
+      --text-xs:   clamp(0.72rem, 0.68rem + 0.2vw, 0.8rem);
+      --text-sm:   clamp(0.85rem, 0.80rem + 0.25vw, 0.95rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.1rem);
+      --text-lg:   clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+      --text-xl:   clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem);
+      --text-2xl:  clamp(1.9rem, 1.2rem + 2.5vw, 3rem);
+      --text-hero: clamp(2.5rem, 1rem + 5vw, 4.5rem);
+    }
+    [data-theme="dark"] {
+      --color-bg:           #171614;
+      --color-surface:      #1c1b19;
+      --color-surface-2:    #222120;
+      --color-border:       #393836;
+      --color-divider:      #2c2b29;
+      --color-text:         #cdccca;
+      --color-text-muted:   #797876;
+      --color-text-faint:   #5a5957;
+      --color-primary:      #4f98a3;
+      --color-primary-hover:#227f8b;
+      --color-primary-light:#1f3535;
+      --color-cover-bg:     #0d2e31;
+      --color-cover-text:   #d8f0ee;
+      --color-gold:         #e8af34;
+      --color-rust:         #d4714d;
+      --color-tag-bg:       #1a3535;
+      --color-tag-text:     #4fb8c5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.25);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --color-bg:#171614; --color-surface:#1c1b19; --color-surface-2:#222120;
+        --color-border:#393836; --color-divider:#2c2b29; --color-text:#cdccca;
+        --color-text-muted:#797876; --color-text-faint:#5a5957;
+        --color-primary:#4f98a3; --color-primary-hover:#227f8b; --color-primary-light:#1f3535;
+        --color-cover-bg:#0d2e31; --color-cover-text:#d8f0ee;
+        --color-gold:#e8af34; --color-rust:#d4714d;
+        --color-tag-bg:#1a3535; --color-tag-text:#4fb8c5;
+        --shadow-sm:0 1px 3px rgba(0,0,0,.25); --shadow-md:0 4px 16px rgba(0,0,0,.35);
+      }
+    }
+
+    /* ─── Reset & base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    body { font-family: var(--font-body); font-size: var(--text-base); line-height: 1.7; color: var(--color-text); background: var(--color-bg); }
+    img { display: block; max-width: 100%; }
+    h1,h2,h3,h4,h5 { text-wrap: balance; line-height: 1.15; }
+    p, li { text-wrap: pretty; max-width: 72ch; }
+    table { border-collapse: collapse; width: 100%; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { color: var(--color-primary-hover); text-decoration: underline; }
+    sup { font-size: 0.65em; vertical-align: super; color: var(--color-primary); font-weight: 600; }
+    ::selection { background: color-mix(in oklab, var(--color-primary) 25%, transparent); }
+
+    /* ─── Layout shell ─── */
+    .page-wrapper { max-width: 900px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+
+    /* ─── Nav / top bar ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #080c14;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 0.75rem clamp(1rem,4vw,2.5rem);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .topbar-logo { display: flex; align-items: center; gap: 0.6rem; font-size: var(--text-sm); font-weight: 600; color: #fff; }
+    .topbar-logo svg { color: #a8c4f8; flex-shrink: 0; }
+    .topbar-nav { display: flex; align-items: center; gap: 1.5rem; }
+    .topbar-nav a { font-size: var(--text-xs); font-weight: 500; color: rgba(255,255,255,.65); transition: color 160ms ease; }
+    .topbar-nav a:hover { color: #fff; text-decoration: none; }
+    .topbar-actions { display:flex; align-items:center; gap:.6rem; }
+    .portal-link {
+      display:inline-flex; align-items:center; gap:4px; padding:7px 12px;
+      border-radius:6px; border:1px solid rgba(255,255,255,.16);
+      font-size:11px; font-weight:600; letter-spacing:.03em;
+      font-family:'DM Sans',sans-serif; color:rgba(255,255,255,.85);
+      background:rgba(255,255,255,.05);
+      text-decoration:none;
+    }
+    .portal-link:hover {
+      color:#fff; border-color:rgba(255,255,255,.26); background:rgba(255,255,255,.1); text-decoration:none;
+    }
+    .theme-toggle {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06); color: rgba(255,255,255,.75);
+      display: grid; place-items: center; cursor: pointer; transition: background 160ms, color 160ms, border-color 160ms;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.28); }
+
+    /* ─── Cover hero ─── */
+    .cover {
+      background: var(--color-cover-bg);
+      color: var(--color-cover-text);
+      padding: clamp(3.5rem, 8vw, 6rem) clamp(1.5rem, 5vw, 3.5rem);
+      position: relative; overflow: hidden;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem));
+    }
+    .cover::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, color-mix(in oklab, var(--color-primary) 30%, transparent) 0%, transparent 60%),
+                  radial-gradient(ellipse at 10% 80%, color-mix(in oklab, var(--color-gold) 12%, transparent) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .cover-inner { position: relative; max-width: 700px; }
+    .cover-eyebrow { font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: color-mix(in oklab, var(--color-primary) 70%, var(--color-cover-text)); margin-bottom: 1.25rem; }
+    .cover h1 { font-family: var(--font-display); font-size: var(--text-hero); font-weight: 400; line-height: 1.05; margin-bottom: 1.25rem; }
+    .cover h1 em { font-style: italic; color: color-mix(in oklab, var(--color-gold) 80%, var(--color-cover-text)); }
+    .cover-subtitle { font-size: var(--text-lg); font-weight: 300; opacity: 0.85; margin-bottom: 2rem; max-width: 60ch; }
+    .cover-meta { display: flex; gap: 2rem; flex-wrap: wrap; font-size: var(--text-xs); font-weight: 500; opacity: 0.65; border-top: 1px solid color-mix(in oklab, white 20%, transparent); padding-top: 1.25rem; }
+
+    /* ─── Section anatomy ─── */
+    .section { padding: clamp(2.5rem, 5vw, 4rem) 0; border-bottom: 1px solid var(--color-divider); }
+    .section:target { scroll-margin-top: 88px; }
+    .section:last-of-type { border-bottom: none; }
+    .section-label { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 0.6rem; }
+    .section > h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; margin-bottom: 1.5rem; }
+    .section > h3, .sub-section > h3 { font-size: var(--text-lg); font-weight: 600; margin-bottom: 0.85rem; color: var(--color-text); }
+    .section p, .sub-section p { color: var(--color-text); margin-bottom: 1rem; }
+    .sub-section { margin-bottom: 2.5rem; }
+    .sub-section:last-child { margin-bottom: 0; }
+
+    /* ─── KPI callouts ─── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .kpi-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi-card .kpi-value { font-size: var(--text-xl); font-weight: 700; color: var(--color-primary); line-height: 1; margin-bottom: 0.35rem; font-variant-numeric: tabular-nums; }
+    .kpi-card .kpi-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+    .kpi-card .kpi-desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; }
+
+    /* ─── Finding cards (exec summary) ─── */
+    .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.75rem 0; }
+    .finding-card {
+      background: var(--color-tag-bg);
+      border: 1px solid color-mix(in oklab, var(--color-primary) 25%, transparent);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+    }
+    .finding-card .finding-num { font-size: var(--text-xs); font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .finding-card p { font-size: var(--text-sm); color: var(--color-tag-text); font-weight: 500; margin: 0; max-width: none; }
+
+    /* ─── Tables ─── */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }
+    .table-wrap table { min-width: 700px; }
+    table thead tr { background: var(--color-cover-bg); color: var(--color-cover-text); }
+    table thead th { padding: 0.75rem 1rem; text-align: left; font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+    table tbody tr { border-bottom: 1px solid var(--color-divider); }
+    table tbody tr:last-child { border-bottom: none; }
+    table tbody tr:nth-child(even) { background: var(--color-surface); }
+    table tbody td { padding: 0.75rem 1rem; font-size: var(--text-sm); vertical-align: top; }
+    table tbody td:first-child { font-weight: 500; }
+    .td-highlight { color: var(--color-primary); font-weight: 700; }
+    .td-warn { color: var(--color-rust); font-weight: 600; }
+    .td-good { color: var(--color-primary); font-weight: 600; }
+
+    /* ─── Chart containers ─── */
+    .chart-wrap {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-title { font-size: var(--text-sm); font-weight: 700; color: var(--color-text); margin-bottom: 0.3rem; }
+    .chart-sub { font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 1.25rem; }
+    .chart-canvas-wrap { position: relative; min-height: clamp(220px, 44vw, 360px); }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* ─── Blockquote / callout ─── */
+    .pullquote {
+      border-left: 3px solid var(--color-primary);
+      background: var(--color-primary-light);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 2rem 0;
+    }
+    .pullquote p { font-size: var(--text-base); font-style: italic; color: var(--color-text); margin: 0 0 0.5rem; max-width: 70ch; font-family: var(--font-display); }
+    .pullquote cite { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); font-style: normal; }
+
+    /* ─── Case study box ─── */
+    .case-study {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-top: 3px solid var(--color-gold);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .case-study .cs-label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-gold); margin-bottom: 0.6rem; }
+    .case-study h4 { font-size: var(--text-base); font-weight: 700; margin-bottom: 0.75rem; }
+    .case-study p { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; max-width: none; }
+
+    /* ─── Numbered list (structural reasons) ─── */
+    .reasons-list { list-style: none; display: flex; flex-direction: column; gap: 1.25rem; margin: 1.5rem 0; }
+    .reasons-list li { display: flex; gap: 1rem; align-items: flex-start; }
+    .reasons-list .reason-num {
+      flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--color-primary); color: white;
+      display: grid; place-items: center;
+      font-size: var(--text-xs); font-weight: 700;
+    }
+    .reasons-list .reason-body { flex: 1; }
+    .reasons-list .reason-body strong { display: block; font-size: var(--text-base); font-weight: 700; margin-bottom: 0.3rem; }
+    .reasons-list .reason-body p { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; max-width: none; }
+
+    /* ─── Risk factors ─── */
+    .risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .risk-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-rust);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+    .risk-card h4 { font-size: var(--text-sm); font-weight: 700; margin-bottom: 0.5rem; color: var(--color-rust); }
+    .risk-card p { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0; max-width: none; line-height: 1.55; }
+
+    /* ─── Conclusion ─── */
+    .takeaways { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0; }
+    .takeaways li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: var(--text-base); }
+    .takeaways li::before { content: '→'; color: var(--color-primary); font-weight: 700; flex-shrink: 0; margin-top: 0.1em; }
+
+    /* ─── Sources ─── */
+    .sources-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem; }
+    .sources-list li { font-size: var(--text-xs); color: var(--color-text-muted); display: flex; gap: 0.5rem; }
+    .sources-list li .src-num { color: var(--color-primary); font-weight: 700; flex-shrink: 0; min-width: 1.5rem; }
+    .sources-list li a { color: var(--color-primary); word-break: break-all; }
+
+    /* ─── Footer ─── */
+    .report-footer {
+      margin-top: 3rem; padding: 2rem 0;
+      border-top: 1px solid var(--color-border);
+      text-align: center; font-size: var(--text-xs); color: var(--color-text-faint);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .topbar-nav { display: none; }
+      .topbar-logo { font-size: 12px; }
+      .topbar-logo .brand-short { display: inline; }
+      .topbar-logo .brand-long { display: none; }
+      .portal-link { padding:6px 10px; font-size:10px; }
+      .cover { padding: 2.5rem 1.25rem; }
+      .cover h1 { font-size: clamp(2rem, 8vw, 3rem); }
+    }
+    @media (min-width: 641px) {
+      .topbar-logo .brand-short { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      <span class="brand-long">Constellation Software · TSX: CSU</span><span class="brand-short">CSI · TSX: CSU</span>
+    </div>
+    <nav class="topbar-nav" aria-label="Report sections">
+      <a href="#structural">Why Small TAM</a>
+      <a href="#exec-summary">Summary</a>
+      <a href="#roic-trend">ROIC Trend</a>
+      <a href="#small-vs-large">Small vs Large</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#risks">Risks</a>
+    </nav>
+    <div class="topbar-actions">
+      <a class="portal-link" href="index.html">← Back to Portal</a>
+      <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- COVER -->
+  <div class="page-wrapper">
+    <section class="cover" aria-label="Report cover">
+      <div class="cover-inner">
+        <p class="cover-eyebrow">Investment Research · April 2026</p>
+        <h1>Constellation Software:<br><em>The Small TAM Advantage</em></h1>
+        <p class="cover-subtitle">ROIC, IRR &amp; Acquisition Returns Analysis — Small vs. Large TAM VMS Deals (2006–2026)</p>
+        <div class="cover-meta">
+          <span>Sources: CSI President's Letters 2006–2025, Analyst Reports, Public Filings</span>
+          <span>21 Data Points · 5 Charts · 800+ Acquisitions Analysed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY SMALL TAM -->
+    <section class="section" id="structural">
+      <p class="section-label">Structural Analysis</p>
+      <h2>Why Small TAM Outperforms: 7 Structural Reasons</h2>
+
+      <div class="pullquote">
+        <p>"We have tried to maintain high hurdle rates for our acquisitions. These hurdle rates are magnetic — they tend to attract teams who seek out the most compelling deals rather than rationalising lower returns."</p>
+        <cite>— Mark Leonard, President, Constellation Software</cite>
+      </div>
+
+      <ul class="reasons-list">
+        <li>
+          <div class="reason-num">1</div>
+          <div class="reason-body">
+            <strong>No Auction Competition</strong>
+            <p>Tiny market niches are systematically ignored by PE funds, which need deals large enough to justify due diligence overhead. CSI is frequently the sole bidder for businesses with &lt;$3M revenue. With no competing offers, price discovery favors the buyer — multiples land at 0.5–0.9× revenue rather than 2–4× in competitive processes.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">2</div>
+          <div class="reason-body">
+            <strong>Switching Cost Monopolies</strong>
+            <p>Small TAM VMS businesses serve 1–2 verticals with deeply embedded software. Customers face 12–24 month migration projects and workflow disruption to switch — creating near-permanent retention, often 95%+ gross retention, that eliminates churn risk inherent in competitive horizontal markets.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">3</div>
+          <div class="reason-body">
+            <strong>Price-to-FCF Is Deceptively Cheap</strong>
+            <p>At 0.8× revenue and 30%+ EBITDA margins, the FCF yield exceeds 30%. This is a &lt;3× EBITDA entry price — dramatically below even the cheapest public software multiples. The small size makes these deals invisible to analysts but economically extraordinary.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">4</div>
+          <div class="reason-body">
+            <strong>Horizontal Acquirers Must Integrate</strong>
+            <p>Salesforce and ServiceNow cannot simply hold acquisitions permanently — they must migrate acquired software onto their core platform to extract synergies. This creates execution risk, customer disruption, and management distraction that CSI never faces. Integration failures account for a large portion of the ~15–25% strategic M&amp;A failure rate.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">5</div>
+          <div class="reason-body">
+            <strong>CSI Never Integrates — Zero Integration Cost</strong>
+            <p>Permanent decentralised ownership is CSI's most underappreciated structural advantage. No platform migrations, no staff redundancies, no product rebrandings. Each acquisition retains its full operating team and customer relationships — eliminating the single largest source of M&amp;A value destruction.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">6</div>
+          <div class="reason-body">
+            <strong>Small TAM = No Growth Reinvestment Required</strong>
+            <p>Saturated niche markets mean CSI's businesses do not need to reinvest in sales, marketing, or product expansion to maintain revenue. FCF flows almost entirely to the acquirer. Salesforce and ServiceNow must continuously reinvest 35–45% of revenue in S&amp;M just to maintain their growth trajectories.</p>
+          </div>
+        </li>
+        <li>
+          <div class="reason-num">7</div>
+          <div class="reason-body">
+            <strong>Tiered Hurdle Rate Discipline</strong>
+            <p>CSI's hurdle rates (30%/25%/20%/15%) create a self-enforcing filter. Deal teams cannot rationalise overpaying by assuming synergies — each deal must stand alone. As Leonard has noted, "hurdle rates are magnetic" — they anchor negotiation and prevent the empire-building that plagues large-cap software M&amp;A.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="case-study">
+        <div class="cs-label">Case Study</div>
+        <h4>Optimal Blue (2023 Restructuring)</h4>
+        <p>CSI acquired a controlling interest in Optimal Blue, a mortgage pricing software platform with &gt;$100M revenue (estimated $220M in 2023), at terms reportedly equivalent to &lt;1× upfront revenue commitment, with &gt;50% EBITDA margins and EBITDA multiple &lt;2× upfront. The deal demonstrated CSI's ability to find large-deal exceptions that meet small-deal economics. However, such "forced seller" situations are rare by definition — the pipeline of $100M+ revenue VMS businesses at &lt;1× revenue is extremely thin.<sup>11</sup></p>
+      </div>
+    </section>
+
+    <!-- EXEC SUMMARY -->
+    <section class="section" id="exec-summary">
+      <p class="section-label">Executive Summary</p>
+      <h2>The Core Thesis</h2>
+      <p>Constellation Software (CSI) has compounded shareholder value at extraordinary rates since its 1995 founding by systematically acquiring small vertical market software (VMS) businesses at disciplined prices. The company's decentralised model — permanent ownership, no integration, tiered hurdle rates — produced management-defined ROIC of 21–38% from 2006 to 2015, far exceeding the 7.9–9.0% ROIC earned by horizontal software acquirers like Salesforce and ServiceNow.<sup>1,9,10</sup></p>
+      <p>However, as CSI has grown and shifted into larger acquisitions, ROIC has declined toward ~17% by 2024 — a structural consequence of higher multiples, more competition, and the inherent difficulty of scaling a small-TAM strategy. This report quantifies the performance gap, dissects the structural reasons small TAM outperforms, and identifies the key metrics to watch.</p>
+
+      <div class="findings-grid">
+        <div class="finding-card">
+          <div class="finding-num">Finding 01</div>
+          <p>Small VMS acquisitions target <strong>25–30% IRR</strong> vs. only 15% hurdle for deals &gt;$50M revenue</p>
+        </div>
+        <div class="finding-card">
+          <div class="finding-num">Finding 02</div>
+          <p>CSI ROIC declined from <strong>38% peak (2015)</strong> to ~17% (2024) as deal size increased</p>
+        </div>
+        <div class="finding-card">
+          <div class="finding-num">Finding 03</div>
+          <p>Failure/impairment rate <strong>&lt;2%</strong> for small VMS vs. ~15–25% industry average for large strategic M&amp;A</p>
+        </div>
+        <div class="finding-card">
+          <div class="finding-num">Finding 04</div>
+          <p>Salesforce/ServiceNow ROIC of <strong>7.9–9.0%</strong> (GAAP) vs. CSI historical 25–38% on small deals<sup>9,10</sup></p>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Acquisitions (since 1995)</div>
+          <div class="kpi-value">800+</div>
+          <div class="kpi-desc">Mostly &lt;$10M revenue, niche VMS businesses</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Revenue (2025 annualised)</div>
+          <div class="kpi-value">~$12B</div>
+          <div class="kpi-desc">Q4 2025 at $3.18B quarterly run-rate, 18% YoY</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Recurring Revenue Mix</div>
+          <div class="kpi-value">~75%</div>
+          <div class="kpi-desc">High predictability from maintenance &amp; subscriptions</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Portfolio Impairment Rate</div>
+          <div class="kpi-value">&lt;0.4%</div>
+          <div class="kpi-desc">$43M impairments on $11.6B revenue (2024)<sup>4</sup></div>
+        </div>
+      </div>
+
+      <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:1rem;"><strong>Note on ROIC definitions:</strong> Unless stated, ROIC uses CSI's management definition: Adjusted Net Income / Average Invested Capital (excluding goodwill amortisation). GAAP ROIC (which includes full goodwill) currently runs ~11.6% per Alpha Spread. Competitor ROIC figures use GAAP methodology for comparability.<sup>9,10</sup></p>
+    </section>
+
+    <!-- BUSINESS MODEL -->
+    <section class="section" id="business-model">
+      <p class="section-label">Business Model</p>
+      <h2>The VMS Acquisition Flywheel</h2>
+      <div class="sub-section">
+        <p>CSI acquires vertical market software companies — businesses serving a single niche (port management, campground software, utility billing) with deep workflow integration and near-zero competition. Unlike strategic acquirers, CSI <em>never integrates</em> acquired businesses onto a shared platform. Each business unit retains its brand, customers, and staff permanently, eliminating integration risk and preserving customer relationships.</p>
+        <p>CSI's M&amp;A teams use the <strong>First Chicago Method</strong> — four probability-weighted scenarios (Bust, Base, Good, Venture) per acquisition. The model solves for the price at which the weighted-average IRR meets the relevant hurdle rate, enforcing consistent financial discipline across hundreds of decentralised deal teams globally.<sup>5</sup></p>
+      </div>
+
+      <h3>Tiered Hurdle Rates by Deal Size</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Revenue Band</th><th>IRR Hurdle</th><th>Deal Share</th><th>Competition Level</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>&lt; $1M revenue</td><td class="td-highlight">30%</td><td>~15%</td><td>Very Low</td><td>CSI often sole bidder</td></tr>
+            <tr><td>$1M – $4M revenue</td><td class="td-highlight">25%</td><td>~75% (core)</td><td>Low–Medium</td><td>Together with &lt;$1M cohort, this is ~90% of all deals<sup>5</sup></td></tr>
+            <tr><td>$4M – $50M revenue</td><td class="td-highlight">20%</td><td>~8%</td><td>Medium</td><td>PE beginning to compete</td></tr>
+            <tr><td>&gt; $50M revenue</td><td class="td-highlight">15%</td><td>~1–2%</td><td>High</td><td>Full PE auction dynamics; only 1–2/year</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--color-text-muted);">Source: In Practise interview with former CSI M&amp;A executive; 2015 President's Letter<sup>1,5</sup></p>
+    </section>
+
+    <!-- ROIC TREND -->
+    <section class="section" id="roic-trend">
+      <p class="section-label">Figure 1</p>
+      <h2>ROIC Trend Analysis (2006–2024)</h2>
+      <p>CSI management ROIC peaked at 38% in 2015, driven by an unusual mix of high-margin, shrinking businesses acquired at attractive tax structures. The decline since reflects three structural forces: increasing deal sizes, growing PE competition in the $2–10M revenue band, and the arithmetic reality that a larger capital base is harder to deploy at high returns.<sup>1,3,6</sup></p>
+
+      <div class="chart-wrap">
+        <div class="chart-title">CSI ROIC Declined as Deal Size Grew (2006–2024)</div>
+        <div class="chart-sub">Management-definition ROIC (blue) vs Combined Ratio = ROIC + Organic Growth (dashed). Reference lines: 25% hurdle &amp; 20% floor.</div>
+        <div class="chart-canvas-wrap"><canvas id="roicChart" height="340"></canvas></div>
+      </div>
+
+      <h3>Combined Ratio by Period</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Period</th><th>ROIC</th><th>Organic Growth</th><th>Combined Ratio</th><th>Signal</th></tr></thead>
+          <tbody>
+            <tr><td>2007–2015 avg</td><td>~30%</td><td>~3%</td><td>~33%</td><td class="td-good">Excellent</td></tr>
+            <tr><td>2015 (Peak)</td><td>38%</td><td>~2%</td><td>~40%</td><td class="td-good">Peak performance</td></tr>
+            <tr><td>2017</td><td>29%</td><td>4%</td><td>33%</td><td class="td-good">Still strong</td></tr>
+            <tr><td>2019</td><td>~25%</td><td>~2%</td><td>~27%</td><td class="td-good">Healthy</td></tr>
+            <tr><td>2021</td><td>~22%</td><td>~2%</td><td>~24%</td><td class="td-warn">Approaching threshold</td></tr>
+            <tr><td>2024</td><td>~17%</td><td>~2%</td><td>~19%</td><td class="td-warn">Below 20% threshold</td></tr>
+            <tr><td><strong>Healthy Threshold</strong></td><td>&gt;20%</td><td>&gt;2%</td><td>&gt;25%</td><td>Watch closely</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- HURDLE RATES CHART -->
+    <section class="section" id="small-vs-large">
+      <p class="section-label">Figure 2</p>
+      <h2>Hurdle Rate &amp; IRR Analysis by Deal Size</h2>
+      <p>Mark Leonard described hurdle rates as <strong>"magnetic"</strong> — they don't just represent a floor but anchor the price negotiations. Teams with a 25% hurdle naturally negotiate to ensure that target is achievable; teams with a 15% hurdle implicitly accept higher multiples. The practical consequence: small-deal teams pay 0.5–0.9× revenue; large-deal teams pay 2–4× revenue — a 3–5× difference in entry price.<sup>5,6</sup></p>
+
+      <div class="chart-wrap">
+        <div class="chart-title">CSI Tiered Hurdle Rates — Higher IRR for Smaller Deals</div>
+        <div class="chart-sub">Hurdle rate (solid) and typical achieved IRR range (lighter band) by revenue band. Roughly 90% of historical deals are in the &lt;$4M revenue cohort.</div>
+        <div class="chart-canvas-wrap"><canvas id="hurdleChart" height="260"></canvas></div>
+      </div>
+
+      <h3>Return Attribution: Where Alpha Comes From</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Source of Excess Return</th><th>Applicable To</th><th>Impact on IRR</th></tr></thead>
+          <tbody>
+            <tr><td>No auction competition</td><td>Deals &lt;$4M revenue</td><td class="td-good">+5–10% vs. comparable PE deal</td></tr>
+            <tr><td>Switching cost moat (no churn)</td><td>All VMS</td><td class="td-good">+3–8% via low reinvestment needs</td></tr>
+            <tr><td>Permanent hold (no exit compression)</td><td>All VMS</td><td class="td-good">+2–5% (no PE time-limit pressure)</td></tr>
+            <tr><td>No integration cost</td><td>All VMS</td><td class="td-good">+1–3% (zero platform migration risk)</td></tr>
+            <tr><td>Low entry multiple (0.8× rev)</td><td>Deals &lt;$4M revenue</td><td class="td-good">+8–15% vs. large deal economics</td></tr>
+            <tr><td>Disciplined hurdle enforcement</td><td>All deals</td><td>Filters out low-IRR opportunities</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ACQUISITION MULTIPLES CHART -->
+    <section class="section" id="multiples">
+      <p class="section-label">Figure 3</p>
+      <h2>Acquisition Multiple Analysis</h2>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Revenue Multiple Paid Soars as Deal Size Grows</div>
+        <div class="chart-sub">EV / Revenue multiple by deal category. CSI pre-2015 small deals at 0.5–0.9× contrast with Salesforce/ServiceNow at 3–8×+. Error bars show range.<sup>11,12</sup></div>
+        <div class="chart-canvas-wrap"><canvas id="multipleChart" height="300"></canvas></div>
+      </div>
+
+      <h3>The Payback Math: Why Low Multiples Win</h3>
+      <p>Here is the same math in plain terms. If CSI buys a business for <strong>0.8× revenue</strong> and the business runs at a <strong>30% EBITDA margin</strong>, the entry EBITDA yield is <strong>37.5%</strong> (30 divided by 0.8). After tax and maintenance capex, free-cash-flow yield is still about <strong>30–33%</strong>. That means CSI can often earn back its purchase price in roughly <strong>3.0–3.3 years</strong>, which is why these deals can support <strong>25–35%+ IRRs</strong>.<sup>11</sup></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Deal Type</th><th>Revenue Multiple</th><th>EBITDA Margin</th><th>EBITDA Yield</th><th>Est. Payback</th><th>Implied IRR</th></tr></thead>
+          <tbody>
+            <tr><td>CSI Small VMS</td><td class="td-good">0.5–0.9×</td><td>30–40%</td><td>33–80%</td><td class="td-good">2.7–4 yrs</td><td class="td-highlight">25–40%+</td></tr>
+            <tr><td>CSI Mid VMS</td><td>1.0–2.0×</td><td>25–35%</td><td>12–35%</td><td>4–7 yrs</td><td class="td-good">18–28%</td></tr>
+            <tr><td>CSI Large VMS</td><td>2.0–4.0×</td><td>20–30%</td><td>5–15%</td><td>6–10+ yrs</td><td>15–22%</td></tr>
+            <tr><td>Salesforce (Slack)</td><td class="td-warn">~4.0×</td><td>~15%</td><td>~3.75%</td><td class="td-warn">10–15+ yrs</td><td class="td-warn">8–12% est.</td></tr>
+            <tr><td>ServiceNow (Armis)</td><td class="td-warn">~4.3×</td><td>~10%</td><td>~2.3%</td><td class="td-warn">15–20+ yrs</td><td class="td-warn">6–10% est.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--color-text-muted);">EBITDA Yield = EBITDA Margin ÷ Revenue Multiple. Payback = 1 ÷ FCF Yield (after 30% taxes and ~3% maintenance capex). IRR estimates assume terminal value at 8–10× FCF after 10 years.<sup>6,11,12</sup></p>
+    </section>
+
+    <!-- RETURN DISPERSION -->
+    <section class="section" id="dispersion">
+      <p class="section-label">Figure 4</p>
+      <h2>IRR Return Distribution Analysis</h2>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Small VMS Delivers Superior IRR with Lower Dispersion</div>
+        <div class="chart-sub">Approximate IRR distributions. CSI small VMS (teal) shows a tight, high-mean distribution. Large TAM acquirers (rust) show wider dispersion and lower mean, reflecting integration risk and premium entry multiples. Distributions estimated from portfolio data; individual deal IRRs are not publicly disclosed.<sup>1,5,8</sup></div>
+        <div class="chart-canvas-wrap"><canvas id="distChart" height="300"></canvas></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cohort</th><th>Est. Mean IRR</th><th>Est. Std Dev</th><th>10th Percentile</th><th>90th Percentile</th><th>Key Risk</th></tr></thead>
+          <tbody>
+            <tr><td>CSI Small VMS</td><td class="td-highlight">~27%</td><td>~8%</td><td>~15%</td><td class="td-good">&gt;40%</td><td>Low — structural moat limits downside</td></tr>
+            <tr><td>CSI Large VMS</td><td class="td-good">~18%</td><td>~6%</td><td>~10%</td><td>~26%</td><td>Medium — higher multiples, PE competition</td></tr>
+            <tr><td>Large TAM Acquirers</td><td class="td-warn">~10%</td><td>~12%</td><td class="td-warn">&lt;0%</td><td>~25%</td><td>High — integration risk, goodwill writes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Failure and Impairment Rates: CSI vs. Industry</h3>
+      <p>In the 2008 President's Letter, Mark Leonard noted that of the first 45+ acquisitions, only one had delivered a below-10% after-tax IRR — and only one between 10% and 20%. All others exceeded the 20% threshold.<sup>1</sup> As of 2024, total impairments were $43M on $11.6B revenue — less than 0.4%.<sup>4</sup></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cohort</th><th>Failure / Impairment Rate</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>CSI small VMS (&lt;$4M revenue)</td><td class="td-good">&lt;2%</td><td>Only 2 of 45+ in early portfolio below 20% IRR<sup>1</sup></td></tr>
+            <tr><td>CSI mid VMS ($4–50M revenue)</td><td>~3–5%</td><td>Estimate based on portfolio performance data</td></tr>
+            <tr><td>CSI large VMS (&gt;$50M revenue)</td><td>~5–8%</td><td>Newer cohort, limited history</td></tr>
+            <tr><td>Large strategic M&amp;A (industry)</td><td class="td-warn">~15–25%</td><td>Academic/consulting research consensus</td></tr>
+            <tr><td>Salesforce mega-deals</td><td class="td-warn">Medium–High</td><td>Slack ($15.7B), Tableau ($7.75B) under goodwill pressure</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FULL COMPARISON -->
+    <section class="section" id="comparison">
+      <p class="section-label">Figure 5</p>
+      <h2>ROIC Comparison: CSI vs. Horizontal Acquirers</h2>
+
+      <p>This section places CSI's acquisition returns in direct context against Salesforce and ServiceNow — the two most prominent horizontal software acquirers by market capitalisation. The comparison is intentionally structured around ROIC rather than revenue growth or gross margin, because ROIC captures what matters most for long-term compounding: how much economic value is created for every dollar of capital deployed.</p>
+      <p>The contrast is stark. At its historical peak, CSI's small VMS acquisition engine produced management-defined ROIC of 30–38%. At current rates (~17%), it is still roughly twice the GAAP ROIC of Salesforce (7.9%) and ServiceNow (8.3–9.0%). Both horizontal acquirers are operating close to — or in some definitions just below — their ~9–10% weighted average cost of capital when full goodwill from large acquisitions is included in the invested capital base.<sup>9,10</sup></p>
+      <p>The structural reason for this gap is not that Salesforce or ServiceNow are poor operators. Both generate exceptional FCF margins (34–57%) from their existing customer bases. The drag comes entirely from the price paid for acquired assets. When a company pays 10–25× EBITDA for a growth-stage platform it then must integrate, the entry yield is too low to produce high ROIC even with strong underlying performance.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-title">CSI Generates 3–4× the ROIC of Horizontal Software Acquirers</div>
+        <div class="chart-sub">Side-by-side ROIC comparison. WACC reference line (~9%) marks the economic value-creation threshold. Sources: Alpha Spread; CSI President's Letters; SBO Financial<sup>1,2,3,9,10,13</sup></div>
+        <div class="chart-canvas-wrap"><canvas id="roicCompChart" height="300"></canvas></div>
+      </div>
+
+      <h3>Strategy Comparison Table</h3>
+      <p>The table below compares the most important acquisition and capital allocation metrics across the four strategic profiles. Read it as a guide to understanding <em>why</em> the ROIC outcomes differ — not just that they differ. Each row tells part of the same story: the lower the entry multiple, the higher the retained FCF yield, and the more forgiving the investment model is of execution variance.</p>
+      <p>Two rows deserve particular attention. First, <strong>FCF margin</strong>: Salesforce and ServiceNow generate far higher FCF margins from their own operations than CSI does. This is a genuine advantage for shareholders in those businesses. But it does not translate into high acquisition ROIC, because the cost of buying those assets consumes most of the FCF yield before it can compound. Second, <strong>acquisition failure rate</strong>: CSI's &lt;2% impairment rate on small deals versus an estimated ~15–25% for large strategic M&amp;A underscores how much of acquisition value creation depends on deal selection and integration risk, not just business quality.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>CSI Small VMS</th><th>CSI Large VMS</th><th>Salesforce (CRM)</th><th>ServiceNow (NOW)</th></tr></thead>
+          <tbody>
+            <tr><td>Acquisition IRR (targeted)</td><td class="td-highlight">25–30%</td><td class="td-good">15–20%</td><td class="td-warn">~8–12% est.</td><td class="td-warn">~10–15% est.</td></tr>
+            <tr><td>ROIC (mgmt def.)</td><td class="td-highlight">30–38% historical</td><td class="td-good">17–22% current</td><td class="td-warn">7.9% GAAP<sup>9</sup></td><td class="td-warn">8.3–9.0% GAAP<sup>10</sup></td></tr>
+            <tr><td>Revenue multiple paid</td><td class="td-good">0.5–0.9×</td><td>2–4×</td><td class="td-warn">3–8×+</td><td class="td-warn">4–10×+</td></tr>
+            <tr><td>EBITDA multiple paid</td><td class="td-good">3–5×</td><td>5–8×</td><td class="td-warn">10–20×</td><td class="td-warn">12–25×</td></tr>
+            <tr><td>Organic revenue growth</td><td>2% portfolio avg</td><td>Same</td><td class="td-good">8–10%</td><td class="td-highlight">20–21%</td></tr>
+            <tr><td>FCF margin (acquirer)</td><td>~14–16%</td><td>Same</td><td class="td-highlight">~34%</td><td class="td-highlight">~40–57%</td></tr>
+            <tr><td>Acquisition failure rate</td><td class="td-highlight">&lt;2% small deals</td><td class="td-good">~5–8%</td><td class="td-warn">~15–25% est.</td><td class="td-warn">~15–25% est.</td></tr>
+            <tr><td>Deal strategy</td><td>Hold forever, no integration</td><td>Same</td><td>Platform integration</td><td>Platform integration</td></tr>
+            <tr><td>TAM orientation</td><td>Smallest niche monopoly</td><td>Mid-market niche</td><td>Horizontal CRM platform</td><td>Horizontal ITSM platform</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-top:0.75rem;">Note: CSI organic growth of ~2% is intentional — by design, not underperformance. CSI targets saturated markets with high FCF yield. Salesforce and ServiceNow must reinvest 35–40% of revenue in sales and marketing just to sustain their higher growth rates. Stripping out that reinvestment requirement, the gap in underlying business quality narrows considerably.</p>
+
+      <div class="pullquote">
+        <p>The key insight from this table is not that CSI is a better business than Salesforce or ServiceNow — it is that CSI operates a fundamentally different economic model. One model optimises for growth via large platform acquisitions at premium multiples. The other optimises for capital efficiency via niche acquisitions at low multiples with no integration requirement. Only one of those models has historically produced ROIC materially above cost of capital on a deal-by-deal basis.</p>
+      </div>
+
+      <h3 style="margin-top:2.5rem;">Entity ROIC Directory</h3>
+      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:1rem;">GAAP ROIC for all named entities, sourced from Alpha Spread, GuruFocus, and company filings. CSI management ROIC (excluding goodwill amortisation) is materially higher — see Figure 1. ROIC methodology varies by source; figures shown on a comparable GAAP basis unless noted.<sup>9,10,13</sup></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Ticker</th>
+              <th>Category</th>
+              <th>ROIC (Latest)</th>
+              <th>Trend</th>
+              <th>WACC</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- CSI FAMILY -->
+            <tr style="background:color-mix(in oklab,var(--color-primary) 9%,transparent)">
+              <td colspan="7" style="font-size:var(--text-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-primary);padding:.5rem 1rem;">Constellation Software Family</td>
+            </tr>
+            <tr>
+              <td><strong>Constellation Software</strong></td>
+              <td>TSX: CSU</td>
+              <td>VMS Serial Acquirer</td>
+              <td class="td-highlight">11.6% GAAP &nbsp;<span style="font-weight:400;color:var(--color-text-muted);">/ ~17% Mgmt</span></td>
+              <td class="td-warn">↓ Declining (peak 38%, 2015)</td>
+              <td>~9%</td>
+              <td>GAAP per Alpha Spread; mgmt def. excl. goodwill amort.<sup>9,13</sup></td>
+            </tr>
+            <tr>
+              <td><strong>Topicus.com</strong></td>
+              <td>TSXV: TOI</td>
+              <td>CSI Spinoff — European VMS</td>
+              <td class="td-good">12.3% GAAP &nbsp;<span style="font-weight:400;color:var(--color-text-muted);">/ ~28% M&amp;A ROIC</span></td>
+              <td class="td-good">↑ Improving</td>
+              <td>~4.6%</td>
+              <td>M&amp;A ROIC est. from 2024 deployment: ~1× rev, 25% EBITA margin<sup>7</sup></td>
+            </tr>
+            <tr>
+              <td><strong>CSI — Small VMS deals</strong></td>
+              <td>—</td>
+              <td>Deal-level estimate</td>
+              <td class="td-highlight">25–40%+ IRR</td>
+              <td class="td-highlight">Structural (sustained)</td>
+              <td>—</td>
+              <td>0.5–0.9× rev entry; sole-bidder; &lt;2% impairment rate<sup>1,5,6</sup></td>
+            </tr>
+            <tr>
+              <td><strong>CSI — Mid VMS deals</strong></td>
+              <td>—</td>
+              <td>Deal-level estimate</td>
+              <td class="td-good">18–28% IRR</td>
+              <td>Stable</td>
+              <td>—</td>
+              <td>1–2× rev; light PE competition; ~3–5% impairment est.<sup>5</sup></td>
+            </tr>
+            <tr>
+              <td><strong>CSI — Large VMS (Altera, Optimal Blue)</strong></td>
+              <td>—</td>
+              <td>Deal-level estimate</td>
+              <td class="td-warn">15–22% IRR</td>
+              <td class="td-warn">↓ Declining hurdle (15% floor)</td>
+              <td>—</td>
+              <td>$700M each; full auction; financed with promissory notes; 15% hurdle<sup>11</sup></td>
+            </tr>
+
+            <!-- LARGE TAM HORIZONTAL ACQUIRERS -->
+            <tr style="background:color-mix(in oklab,var(--color-rust) 8%,transparent)">
+              <td colspan="7" style="font-size:var(--text-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-rust);padding:.5rem 1rem;">Large TAM Horizontal Acquirers</td>
+            </tr>
+            <tr>
+              <td><strong>Salesforce</strong></td>
+              <td>NYSE: CRM</td>
+              <td>Horizontal CRM</td>
+              <td class="td-warn">7.9% GAAP</td>
+              <td class="td-good">↑ Improving (0.7% in Jan 2023 → 7.9%)</td>
+              <td>~9%</td>
+              <td>NOPAT $7B / Avg IC $88.4B; dragged by Tableau &amp; Slack write-downs<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ Tableau</td>
+              <td>—</td>
+              <td>Salesforce acquisition (2019)</td>
+              <td class="td-warn">~8–12% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$15.7B at ~7× rev; BI tool; integration-heavy; ~10–15yr payback<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ Slack</td>
+              <td>—</td>
+              <td>Salesforce acquisition (2021)</td>
+              <td class="td-warn">~5–8% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$27.7B at ~28× ARR; widely viewed as significant overpay<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ MuleSoft</td>
+              <td>—</td>
+              <td>Salesforce acquisition (2018)</td>
+              <td class="td-warn">~10–14% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$6.5B; integration middleware; high platform synergies<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td><strong>ServiceNow</strong></td>
+              <td>NYSE: NOW</td>
+              <td>Horizontal ITSM</td>
+              <td class="td-warn">8.3% GAAP</td>
+              <td class="td-warn">↓ Declining (peak 14.2% Mar 2024)</td>
+              <td>~9.8%</td>
+              <td>NOPAT $1.4B / Avg IC $17.1B; below WACC on GuruFocus def.<sup>10</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ Moveworks (est.)</td>
+              <td>—</td>
+              <td>ServiceNow acquisition (2025)</td>
+              <td class="td-warn">~8–12% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>~$2.85B; AI copilot platform; premium multiple for AI optionality<sup>10</sup></td>
+            </tr>
+
+            <!-- HORIZONTAL PLATFORM OPERATORS -->
+            <tr style="background:color-mix(in oklab,var(--color-gold) 10%,transparent)">
+              <td colspan="7" style="font-size:var(--text-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-gold);padding:.5rem 1rem;">Horizontal Platform Operators (Benchmark)</td>
+            </tr>
+            <tr>
+              <td><strong>Microsoft</strong></td>
+              <td>NASDAQ: MSFT</td>
+              <td>Horizontal OS / Cloud / SaaS</td>
+              <td class="td-highlight">23.7% GAAP</td>
+              <td class="td-warn">↓ Declining (was 30.5% in 2022)</td>
+              <td>~10%</td>
+              <td>Best-in-class horizontal; NOPAT $116B / Avg IC $489B; scale in Azure<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ Activision Blizzard</td>
+              <td>—</td>
+              <td>Microsoft acquisition (2023)</td>
+              <td class="td-warn">~8–12% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$68.7B; largest software M&amp;A ever; gaming; dilutive to near-term ROIC</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ LinkedIn</td>
+              <td>—</td>
+              <td>Microsoft acquisition (2016)</td>
+              <td class="td-good">~15–20% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$26.2B; now >$16B revenue; one of tech's best large-deal M&amp;A outcomes</td>
+            </tr>
+            <tr>
+              <td><strong>Oracle</strong></td>
+              <td>NYSE: ORCL</td>
+              <td>Horizontal ERP / Cloud DB</td>
+              <td class="td-good">11.4% GAAP</td>
+              <td class="td-good">↑ Improving (9.7% in 2022 → 11.4%)</td>
+              <td>~12.3%</td>
+              <td>NOPAT $19.3B / Avg IC $168.9B; cloud transition; below WACC on GuruFocus def.<sup>9</sup></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;└ Cerner</td>
+              <td>—</td>
+              <td>Oracle acquisition (2022)</td>
+              <td class="td-warn">~8–12% est. IRR</td>
+              <td>—</td>
+              <td>—</td>
+              <td>$28.3B; healthcare IT; integration-heavy; margin below Oracle average</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:0.75rem;">Sources: <a href="https://www.alphaspread.com/security/tsx/csu/profitability/ratio/return-on-invested-capital" target="_blank">Alpha Spread – CSI</a> · <a href="https://www.alphaspread.com/security/nyse/crm/profitability/ratio/return-on-invested-capital" target="_blank">Alpha Spread – Salesforce</a> · <a href="https://www.alphaspread.com/security/nyse/now/profitability/ratio/return-on-invested-capital" target="_blank">Alpha Spread – ServiceNow</a> · <a href="https://www.alphaspread.com/security/nasdaq/msft/profitability/ratio/return-on-invested-capital" target="_blank">Alpha Spread – Microsoft</a> · <a href="https://www.alphaspread.com/security/nyse/orcl/profitability/ratio/return-on-invested-capital" target="_blank">Alpha Spread – Oracle</a> · <a href="https://www.gurufocus.com/term/roic/TOITF" target="_blank">GuruFocus – Topicus</a> · <a href="https://seekingwinners.substack.com/p/topicus-q4-2024-earnings-brief" target="_blank">Seeking Winners – TOI M&amp;A ROIC</a>. GAAP ROIC as of latest reported period (2024–2025). Deal-level IRRs are estimates based on purchase price, reported revenue multiples, and standard FCF yield modelling.</p>
+    </section>
+
+    <!-- POST-ACQUISITION GROWTH -->
+    <section class="section" id="organic">
+      <p class="section-label">Organic Performance</p>
+      <h2>Post-Acquisition Revenue Growth</h2>
+      <p>CSI's portfolio organic growth rate of ~2% long-run average is <strong>intentional</strong> — not a failure. CSI acquires saturated-market businesses precisely because they have high FCF margins without needing growth reinvestment. Low organic growth with high FCF yield is the target profile.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>CSI Portfolio (avg)</th><th>Salesforce</th><th>ServiceNow</th></tr></thead>
+          <tbody>
+            <tr><td>Organic revenue growth</td><td>~2% (by design)</td><td>8–10%</td><td>20–21%</td></tr>
+            <tr><td>S&amp;M spend (% revenue)</td><td class="td-good">&lt;5% (negligible reinvestment)</td><td class="td-warn">~35–40%</td><td class="td-warn">~35–40%</td></tr>
+            <tr><td>R&amp;D spend (% revenue)</td><td class="td-good">~10–12%</td><td>~18%</td><td>~22%</td></tr>
+            <tr><td>FCF conversion (FCF/Revenue)</td><td class="td-highlight">~14–16%</td><td class="td-highlight">~34%</td><td class="td-highlight">~40–57%</td></tr>
+            <tr><td>Post-acquisition organic range</td><td>-5% to +8% (niche dependent)</td><td>N/A</td><td>N/A</td></tr>
+            <tr><td>Revenue CAGR (total, 2006–2024)</td><td class="td-highlight">+24%</td><td>+25%</td><td>+30%+</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--color-text-muted);">CSI total revenue CAGR driven almost entirely by acquisitions; organic contributes only ~2%. Q4 2025 reported 6% organic growth but ~2% FX-adjusted.<sup>4</sup></p>
+    </section>
+
+    <!-- RISK FACTORS -->
+    <section class="section" id="risks">
+      <p class="section-label">Risk Factors</p>
+      <h2>The ROIC Compression Thesis &amp; Key Risks</h2>
+      <p>ROIC declining from 38% toward 17% does not necessarily mean value destruction — CSI still generates significant economic value at 17% ROIC against a ~9% WACC. However, the trajectory matters: if CSI deploys $2–3B/year at 17% ROIC vs. $500M/year at 35% historically, the per-dollar return is structurally lower.<sup>4,12</sup></p>
+
+      <div class="risk-grid">
+        <div class="risk-card">
+          <h4>Deteriorating Small VMS Pipeline</h4>
+          <p>There are only so many $1–4M revenue niche VMS businesses available per year globally. Average deal size creeping from $7.5M (2017) to $12.3M (2024) signals the best small opportunities are being absorbed. CSI spawning Topicus and Lumine adds internal competition for the same deal flow.<sup>4,6</sup></p>
+        </div>
+        <div class="risk-card">
+          <h4>PE Micro-Fund Competition</h4>
+          <p>PE micro-fund formation has surged since 2018. Funds with $50–200M AUM can now efficiently underwrite deals at the $2–10M revenue scale that CSI previously dominated. CSI's structural advantage of being sole bidder is gradually eroding, pushing entry multiples higher and IRR lower.</p>
+        </div>
+        <div class="risk-card">
+          <h4>Large Deal ROIC Compression</h4>
+          <p>At least 5 large VMS deals since 2021, including Altera ($700M+) and Optimal Blue, each deployed capital at 15–20% hurdle rates rather than 25–30%. The cumulative effect on portfolio ROIC is visible: 22% (2021) → ~17% (2024).<sup>4,12</sup></p>
+        </div>
+        <div class="risk-card">
+          <h4>PEMS Strategy Risk</h4>
+          <p>CSI's new Permanent Engaged Minority Shareholder strategy — taking minority stakes rather than full acquisitions — expands the deployment universe but introduces governance risk, reduced control over capital allocation, and different risk/return profiles than full ownership.</p>
+        </div>
+        <div class="risk-card">
+          <h4>Mark Leonard Succession</h4>
+          <p>Leonard is CSI's intellectual architect — designer of the hurdle rate system, First Chicago Method, and decentralised culture. His September 2025 departure from the president role for health reasons spooked markets. Spinouts (Topicus, Lumine) provide partial institutional resilience.</p>
+        </div>
+        <div class="risk-card">
+          <h4>AI Disruption to VMS Moats</h4>
+          <p>If AI-assisted migration tools reduce a 24-month data migration to 6 months, switching cost moats weaken. So far, mission-critical VMS integration depth has proven resilient — but the risk warrants monitoring as AI tooling accelerates across enterprise workflows.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="section" id="conclusion">
+      <p class="section-label">Conclusion</p>
+      <h2>Key Takeaways</h2>
+      <p>Constellation Software's historical edge came from small, niche VMS acquisitions where limited competition, low entry multiples, and minimal integration risk supported structurally superior returns. CSI was often able to acquire high-retention, cash-generative assets at 0.5–0.9× revenue, enabling 25–40%+ deal-level IRRs that larger acquirers and most private equity funds could not consistently match.</p>
+      <p>The decline in ROIC from 38% in 2015 to roughly 17% by 2024 is best viewed as evidence of a changing opportunity set, not necessarily weakening execution. As CSI deploys more capital into larger transactions, it is increasingly exposed to competitive auction dynamics, higher purchase multiples, and lower hurdle-rate returns.</p>
+      <p>This shift suggests that CSI's highest-return era was tied to a very specific market segment: small TAM, niche software assets acquired with strict valuation discipline. As deal size rises, returns are naturally converging toward more normalized capital allocation economics.</p>
+      <p>Even with ROIC compression, CSI's outcome quality remains materially better than that of most serial software acquirers. Impairment rates remain exceptionally low, reinforcing the strength of CSI's decentralized ownership model and its focus on mission-critical vertical software businesses with durable customer retention.</p>
+      <p>By contrast, large horizontal acquirers face structurally thinner economics. Paying 3–10× revenue for growth-oriented assets leaves far less room for error, particularly when reported ROIC is only modestly above, or near, cost of capital once goodwill and integration complexity are fully considered.</p>
+      <p>The central question for investors is no longer whether CSI is a disciplined allocator, but whether incremental capital can still earn materially superior returns as the company moves up-market.</p>
+      <p>The most important forward metric to monitor is the combined ratio of ROIC plus organic growth. If that figure remains below 20%, it would suggest CSI is still creating value, but at a meaningfully lower rate than during its historical peak, with reduced reinvestment efficiency and less room for outsized compounding.</p>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="section" id="sources">
+      <p class="section-label">Sources</p>
+      <h2>References</h2>
+      <ol class="sources-list">
+        <li><span class="src-num">1.</span><span>CSI 2015 President's Letter — <a href="https://www.csisoftware.com/docs/default-source/investor-relations/presidents-letter/pl_2015.pdf" target="_blank" rel="noopener">csisoftware.com/…/pl_2015.pdf</a></span></li>
+        <li><span class="src-num">2.</span><span>CSI 2017 President's Letter — <a href="https://www.csisoftware.com/docs/default-source/investor-relations/presidents-letter/2017-presidents-letter-1.pdf" target="_blank" rel="noopener">csisoftware.com/…/2017-presidents-letter-1.pdf</a></span></li>
+        <li><span class="src-num">3.</span><span>CSI 2018 President's Letter — <a href="https://www.csisoftware.com/docs/default-source/investor-relations/presidents-letter/presidents-letter-april-2018-final.pdf" target="_blank" rel="noopener">csisoftware.com/…/presidents-letter-april-2018-final.pdf</a></span></li>
+        <li><span class="src-num">4.</span><span>CSI Q4 2025 Shareholder Report — <a href="https://www.csisoftware.com/docs/default-source/press-releases/q4-2025-shareholder-report.pdf" target="_blank" rel="noopener">csisoftware.com/…/q4-2025-shareholder-report.pdf</a></span></li>
+        <li><span class="src-num">5.</span><span>In Practise — Competition, Hurdle Rates &amp; Deal Flow — <a href="https://inpractise.com/articles/constellation-software-competition-hurdle-rates-and-deal-flow" target="_blank" rel="noopener">inpractise.com/articles/…</a></span></li>
+        <li><span class="src-num">6.</span><span>Type-F Capital — Reinvestment Engine Is Not Out Of Gas — <a href="https://research.typefcapital.com/p/constellation-software-reinvestment" target="_blank" rel="noopener">research.typefcapital.com/p/…</a></span></li>
+        <li><span class="src-num">7.</span><span>Seeking Winners — Q1 2025 Earnings Brief — <a href="https://seekingwinners.substack.com/p/constellation-q1-2025-earnings-brief" target="_blank" rel="noopener">seekingwinners.substack.com/p/…</a></span></li>
+        <li><span class="src-num">8.</span><span>Hated Moats — CSI Deep Dive — <a href="https://hatedmoats.substack.com/p/constellation-software-deep-dive" target="_blank" rel="noopener">hatedmoats.substack.com/p/…</a></span></li>
+        <li><span class="src-num">9.</span><span>Alpha Spread — Salesforce ROIC — <a href="https://www.alphaspread.com/security/nyse/crm/profitability/ratio/return-on-invested-capital" target="_blank" rel="noopener">alphaspread.com/security/nyse/crm/…</a></span></li>
+        <li><span class="src-num">10.</span><span>Alpha Spread — ServiceNow ROIC — <a href="https://www.alphaspread.com/security/nyse/now/profitability/ratio/return-on-invested-capital" target="_blank" rel="noopener">alphaspread.com/security/nyse/now/…</a></span></li>
+        <li><span class="src-num">11.</span><span>RollUpEurope — Optimal Blue Case Study — <a href="https://rollupeurope.com/p/buying-100m-revenue-software-businesses-for-1x-this-can-be-done-if-you-re-constellation-software-001" target="_blank" rel="noopener">rollupeurope.com/p/buying-100m-revenue-businesses…</a></span></li>
+        <li><span class="src-num">12.</span><span>Andvari Associates — Q4 2023 Letter — <a href="https://andvariassociates.com/q4-2023-letter-the-compounding-of-constellation-software" target="_blank" rel="noopener">andvariassociates.com/q4-2023-letter…</a></span></li>
+        <li><span class="src-num">13.</span><span>SBO Financial — Mark Leonard's CSI Teardown — <a href="https://sbo.financial/blog/financial-teardowns/constellation-software-financial-teardown/" target="_blank" rel="noopener">sbo.financial/blog/…</a></span></li>
+        <li><span class="src-num">14.</span><span>Cascadia Capital — The New Reign of Vertical Software — <a href="https://www.cascadiacapital.com/wp-content/uploads/Cascadia-Capital-The-new-reign-of-vertical-software.pdf" target="_blank" rel="noopener">cascadiacapital.com/…vertical-software.pdf</a></span></li>
+      </ol>
+    </section>
+
+    <footer class="report-footer">
+      <p>Constellation Software: The Small TAM Advantage · April 2026</p>
+      <p style="margin-top:0.4rem;">This report is for informational purposes only and does not constitute investment advice.</p>
+    </footer>
+  </div><!-- /page-wrapper -->
+
+  <script>
+    /* ─── Theme toggle ─── */
+    (function(){
+      const t = document.querySelector('[data-theme-toggle]');
+      const r = document.documentElement;
+      let d = localStorage.getItem('csi-report-theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+      r.setAttribute('data-theme', d);
+      function setIcon(theme) {
+        t.innerHTML = theme === 'dark'
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+        t.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode');
+      }
+      setIcon(d);
+      t && t.addEventListener('click', () => {
+        d = d === 'dark' ? 'light' : 'dark';
+        r.setAttribute('data-theme', d);
+        localStorage.setItem('csi-report-theme', d);
+        setIcon(d);
+        renderCharts(); // re-render with new colors
+      });
+    })();
+
+    /* ─── Chart color helper ─── */
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    /* ─── Chart.js global defaults ─── */
+    Chart.defaults.font.family = "'DM Sans', system-ui, sans-serif";
+    Chart.defaults.font.size = 12;
+
+    let charts = {};
+
+    function destroyAll() {
+      Object.values(charts).forEach(c => c && c.destroy());
+      charts = {};
+    }
+
+    function renderCharts() {
+      destroyAll();
+
+      const textColor   = cssVar('--color-text');
+      const mutedColor  = cssVar('--color-text-muted');
+      const faintColor  = cssVar('--color-text-faint');
+      const borderColor = cssVar('--color-border');
+      const surfaceColor= cssVar('--color-surface');
+      const primary     = cssVar('--color-primary');
+      const gold        = cssVar('--color-gold');
+      const rust        = cssVar('--color-rust');
+
+      // Teal for small, gold for mid, rust/red for large/competitors
+      const teal      = primary;
+      const darkTeal  = '#1b474d';
+
+      const gridOpts = {
+        color: borderColor,
+        drawBorder: false,
+      };
+      const tickOpts = { color: mutedColor };
+
+      /* ─── Chart 1: ROIC Trend ─── */
+      charts.roic = new Chart(document.getElementById('roicChart'), {
+        type: 'line',
+        data: {
+          labels: [2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+          datasets: [
+            {
+              label: 'ROIC (Mgmt Def.)',
+              data: [21,22,28,24,26,36,35,35,37,38,31,29,27,25,24,22,20,18,17],
+              borderColor: teal,
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointBackgroundColor: teal,
+              pointRadius: 3,
+              tension: 0.3,
+            },
+            {
+              label: 'Combined Ratio (ROIC + Org. Growth)',
+              data: [23,23,30,25,27,38,37,37,39,40,33,33,29,27,26,24,22,20,19],
+              borderColor: rust,
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [5,4],
+              pointBackgroundColor: rust,
+              pointRadius: 2,
+              tension: 0.3,
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: textColor, boxWidth: 14, padding: 16 } },
+            tooltip: { backgroundColor: surfaceColor, titleColor: textColor, bodyColor: mutedColor, borderColor: borderColor, borderWidth: 1 },
+            annotation: { annotations: {
+              hurdle: { type:'line', yMin:25, yMax:25, borderColor: teal, borderWidth:1.5, borderDash:[4,3], label:{ content:'25% Hurdle', display:true, color: teal, font:{size:10,weight:'bold'}, position:'end', yAdjust:-10 } },
+              floor:  { type:'line', yMin:20, yMax:20, borderColor: gold, borderWidth:1.5, borderDash:[4,3], label:{ content:'20% Floor', display:true, color: gold, font:{size:10,weight:'bold'}, position:'end', yAdjust:10 } }
+            }}
+          },
+          scales: {
+            x: { grid: gridOpts, ticks: { ...tickOpts, maxTicksLimit: 10 } },
+            y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v+'%' }, min: 0, max: 50 }
+          }
+        }
+      });
+
+      /* ─── Chart 2: Hurdle Rates ─── */
+      charts.hurdle = new Chart(document.getElementById('hurdleChart'), {
+        type: 'bar',
+        data: {
+          labels: ['< $1M Revenue\n(Micro VMS)', '$1M–$4M Revenue\n(Core VMS)', '$4M–$50M Revenue\n(Mid-Market)', '> $50M Revenue\n(Large)'],
+          datasets: [
+            {
+              label: 'IRR Hurdle Rate',
+              data: [30, 25, 20, 15],
+              backgroundColor: teal,
+              borderRadius: 4,
+              barPercentage: 0.5,
+            },
+            {
+              label: 'Typical Achieved IRR (midpoint)',
+              data: [40, 31, 21, 15.5],
+              backgroundColor: `${teal}55`,
+              borderRadius: 4,
+              barPercentage: 0.5,
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: textColor, boxWidth: 14, padding: 16 } },
+            tooltip: { backgroundColor: surfaceColor, titleColor: textColor, bodyColor: mutedColor, borderColor: borderColor, borderWidth: 1,
+              callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` }
+            }
+          },
+          scales: {
+            x: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v+'%' }, min: 0, max: 55 },
+            y: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 } } }
+          }
+        }
+      });
+
+      /* ─── Chart 3: Acquisition Multiples ─── */
+      charts.multiples = new Chart(document.getElementById('multipleChart'), {
+        type: 'bar',
+        data: {
+          labels: ['CSI Pre-2015\n(Small VMS)', 'CSI 2015–2019\n(Scale-Up)', 'CSI 2020–2023\n(Large Deals)', 'Salesforce /\nServiceNow'],
+          datasets: [{
+            label: 'EV / Revenue Multiple (midpoint)',
+            data: [0.7, 1.0, 2.25, 5.5],
+            backgroundColor: [teal, `${teal}bb`, gold, rust],
+            borderRadius: 6,
+            barPercentage: 0.55,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: surfaceColor, titleColor: textColor, bodyColor: mutedColor, borderColor: borderColor, borderWidth: 1,
+              callbacks: {
+                label: ctx => {
+                  const ranges = ['0.5–0.9×','0.8–1.2×','1.5–3.0×','3.0–8.0×'];
+                  return ` Range: ${ranges[ctx.dataIndex]}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: textColor, font:{ size:11 } } },
+            y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v+'×' }, min: 0, max: 8 }
+          }
+        }
+      });
+
+      /* ─── Chart 4: IRR Distribution (Gaussian approximation) ─── */
+      function gaussian(x, mean, std) {
+        return (1/(std*Math.sqrt(2*Math.PI))) * Math.exp(-0.5*((x-mean)/std)**2);
+      }
+      const xVals = [];
+      for (let i = -10; i <= 70; i += 1) xVals.push(i);
+      const smallVMSData = xVals.map(x => gaussian(x, 27, 8));
+      const largeVMSData = xVals.map(x => gaussian(x, 18, 6));
+      const largeTAMData = xVals.map(x => gaussian(x, 10, 12));
+      // Normalise so max=1 for visual clarity
+      const norm = arr => { const m = Math.max(...arr); return arr.map(v => v/m); };
+
+      charts.dist = new Chart(document.getElementById('distChart'), {
+        type: 'line',
+        data: {
+          labels: xVals,
+          datasets: [
+            { label: 'CSI Small VMS (<$4M rev) · Mean ~27%, SD ~8%', data: norm(smallVMSData), borderColor: teal, backgroundColor: `${teal}22`, fill: true, borderWidth: 2.5, tension: 0.4, pointRadius: 0 },
+            { label: 'CSI Large VMS (>$50M rev) · Mean ~18%, SD ~6%', data: norm(largeVMSData), borderColor: gold, backgroundColor: `${gold}22`, fill: true, borderWidth: 2, tension: 0.4, pointRadius: 0 },
+            { label: 'Large TAM Acquirers · Mean ~10%, SD ~12%', data: norm(largeTAMData), borderColor: rust, backgroundColor: `${rust}22`, fill: true, borderWidth: 2, tension: 0.4, pointRadius: 0 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: textColor, boxWidth: 14, padding: 12, font:{ size:11 } } },
+            tooltip: { enabled: false }
+          },
+          scales: {
+            x: { grid: gridOpts, ticks: { ...tickOpts, callback: (v,i) => xVals[i] % 10 === 0 ? xVals[i]+'%' : '', maxRotation: 0 }, title: { display:true, text:'Estimated IRR (%)', color: mutedColor, font:{ size:11 } } },
+            y: { display: false }
+          }
+        }
+      });
+
+      /* ─── Chart 5: ROIC Comparison ─── */
+      charts.comp = new Chart(document.getElementById('roicCompChart'), {
+        type: 'bar',
+        data: {
+          labels: ['CSI Small VMS\n(Historical Peak)', 'CSI Small VMS\n(Recent Avg)', 'CSI Current\n(~2024)', 'ServiceNow\n(GAAP)', 'Salesforce\n(GAAP)'],
+          datasets: [{
+            label: 'ROIC (%)',
+            data: [35, 27, 17, 8.7, 7.9],
+            backgroundColor: [teal, `${teal}cc`, gold, rust, rust],
+            borderRadius: 6,
+            barPercentage: 0.55,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: surfaceColor, titleColor: textColor, bodyColor: mutedColor, borderColor: borderColor, borderWidth: 1,
+              callbacks: { label: ctx => ` ROIC: ${ctx.raw}%` }
+            },
+            annotation: { annotations: {
+              wacc: { type:'line', yMin:9, yMax:9, borderColor: faintColor, borderWidth:1.5, borderDash:[6,4], label:{ content:'WACC ~9%', display:true, color: mutedColor, font:{size:10}, position:'start', yAdjust:-10 } }
+            }}
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: textColor, font:{ size:11 } } },
+            y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v+'%' }, min: 0, max: 42 }
+          }
+        }
+      });
+    }
+
+    /* ─── Load Chart.js annotation plugin then render ─── */
+    const annotScript = document.createElement('script');
+    annotScript.src = 'https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js';
+    annotScript.onload = () => {
+      const annotationPlugin = window['chartjs-plugin-annotation'] || window.ChartAnnotation || (window.chartjs && window.chartjs.annotation);
+      if (annotationPlugin) {
+        try {
+          Chart.register(annotationPlugin);
+        } catch (e) {
+          console.warn('Annotation plugin registration failed:', e);
+        }
+      }
+      renderCharts();
+    };
+    annotScript.onerror = () => renderCharts(); // render without annotations if CDN fails
+    document.head.appendChild(annotScript);
+  </script>
+</body>
+</html>
