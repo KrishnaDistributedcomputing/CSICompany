@@ -64,6 +64,14 @@ az webapp config appsettings set `
   --output none
 Write-Host "  ✓ Settings configured" -ForegroundColor Green
 
+Write-Host "▶ Setting startup command..." -ForegroundColor Yellow
+az webapp config set `
+  --name $APP_NAME `
+  --resource-group $RESOURCE_GROUP `
+  --startup-file "npm start" `
+  --output none
+Write-Host "  ✓ Startup command set" -ForegroundColor Green
+
 # Deploy zip
 Write-Host "▶ Deploying zip package (~60 seconds)..." -ForegroundColor Yellow
 az webapp deploy `

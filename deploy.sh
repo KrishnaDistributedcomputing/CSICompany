@@ -75,6 +75,14 @@ az webapp config appsettings set \
   --output none
 echo "  ✓ App settings configured"
 
+echo "▶ Setting startup command..."
+az webapp config set \
+  --name "$APP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --startup-file "npm start" \
+  --output none
+echo "  ✓ Startup command set"
+
 # ── Build the zip if not present ─────────────────────────────
 if [ ! -f "csi-portal-deploy.zip" ]; then
   echo "▶ Building deployment zip..."
